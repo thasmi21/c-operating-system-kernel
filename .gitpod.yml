@@ -1,0 +1,3 @@
+image: sebastienviardot/pcsefriscv:202212291
+tasks:
+  - init: source /opt/vnc.sh
