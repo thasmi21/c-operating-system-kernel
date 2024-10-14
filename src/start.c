@@ -18,10 +18,9 @@ uint32_t fact(uint32_t n)
 
 void kernel_start(void)
 {
+    ecrit_car(0x00000008, 0x00000008, 0xFFFFFFFF);
 
-    uint32_t x = fact(5);
     /* quand on saura gerer l'ecran, on pourra afficher x */
-    (void)x;
     /* on ne doit jamais sortir de kernel_start */
     while (1) {
         /* cette fonction arrete le processeur */
