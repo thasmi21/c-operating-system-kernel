@@ -18,9 +18,14 @@ uint32_t fact(uint32_t n)
 
 void kernel_start(void)
 {
-    ecrit_car(0x00000008, 0x00000008, 0xFFFFFFFF);
+    /*for (int i = 0; i < 1280; i++){
+        pixel(i, 5, 0x0FFFFFFF);
+    }**/
 
-    /* quand on saura gerer l'ecran, on pourra afficher x */
+    //place_curseur(0, 0);
+    
+    ecrit_car(1, 0, "M", 0x0FFFFFFF);
+
     /* on ne doit jamais sortir de kernel_start */
     while (1) {
         /* cette fonction arrete le processeur */
