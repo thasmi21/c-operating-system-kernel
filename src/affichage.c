@@ -52,6 +52,13 @@ void ecrit_car(uint32_t lig, uint32_t col, char c, uint32_t color, uint32_t back
     //     fond = back;
     // }
 
+    //Effacement de pixels potentiels à l'emplacement du caractère
+    for (int i = 0; i < 8; i++){
+        for (int j = 0; j < 8; j++){
+            pixel(col * 8 + j, lig * 8 + i, 0x00000000);
+        }
+    }
+
     //Dessin du caractère 
     for (int i = 0; i < 8; i++){
         for (int j = 0; j < 8; j++){
@@ -98,6 +105,9 @@ void defilement(void){
             pixel(i, 712 + j, 0x00000000);
         }
     }
+
+    //Replacement du curseur
+    place_curseur(89, 0);
 }
 
 void traite_car(char c, uint32_t color){
