@@ -115,8 +115,8 @@ void traite_car(char c, uint32_t color){
     }
 
     if (c == '\t'){
-        if (position_curseur_col < 158){
-            place_curseur(position_curseur_lig, position_curseur_col + 1);
+        if (position_curseur_col < 155){
+            place_curseur(position_curseur_lig, position_curseur_col + 4);
         }
         else {place_curseur(position_curseur_lig + 1, 0);}
     }
