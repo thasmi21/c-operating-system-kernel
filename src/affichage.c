@@ -132,7 +132,10 @@ void traite_car(char c, uint32_t color){
     }
 
     if (c == '\n'){
-        place_curseur(position_curseur_lig + 1, 0);
+        if (position_curseur_lig == 89){
+            defilement()
+        }
+        else {place_curseur(position_curseur_lig + 1, 0);}
     }
     
     if (c == '\f'){
