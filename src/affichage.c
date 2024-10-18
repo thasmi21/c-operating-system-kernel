@@ -92,6 +92,9 @@ void efface_ecran(void){
 
 void defilement(void){
 
+    //Sinon, le curseur est toujours considéré comme à la ligne 89 et donc n'efface pas celui qui a été remonté ligne 88
+    position_curseur_lig -= 1;
+
     //Déplacement des lignes 2 à 89 aux positions 1 à 88
     for (int i = 1; i < 89; i++){
         uint32_t* dest = (uint32_t*) (0x80000000 + i*8*4*1280);
