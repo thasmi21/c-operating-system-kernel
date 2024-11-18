@@ -3,6 +3,9 @@
 #include <cpu.h>
 #include <stddef.h>
 #include "string.h"
+#include "horloge.h"
+
+extern void mon_traitant(void);
 
 /* on peut s'entrainer a utiliser GDB avec ce code de base */
 /* par exemple afficher les valeurs de n et res avec la commande display */
@@ -21,13 +24,12 @@ uint32_t fact(uint32_t n)
 void kernel_start(void)
 {
 
-    write_timer("[12:08:15]");
-
     /* initialisations */
-    //...
+    enable_timer();
+    init_traitant_timer(mon_traitant);
 
     /* démasquage des interruptions externes */
-    //enable_it();
+    enable_it();
 
     /* on ne doit jamais sortir de kernel_start */
     while (1) {
