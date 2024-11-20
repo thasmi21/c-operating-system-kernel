@@ -17,4 +17,6 @@ void enable_timer();
 //Retourne le nombre de secondes écoulées depuis le lancement du terminal
 uint32_t nbr_secondes(void);
 
+extern void mon_traitant(void);
+
 #endif

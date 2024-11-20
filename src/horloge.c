@@ -24,7 +24,7 @@ void write_timer(const char *s){
 void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
     
     //Vérification de la nature de l'interruption
-    if (mcause & 0x7FFFFFFFFFFFFFFF ==7){ //Identification d'une exception timer
+    if ((mcause & 0x7FFFFFFFFFFFFFFF) ==7){ //Identification d'une exception timer
 
         //Acquitter auprès du composant que l'exception a bien été traitée
         interruptions += 1; //Incrémentation du nombre d'interruptions levées depuis le lancement du système
