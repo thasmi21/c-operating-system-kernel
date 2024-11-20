@@ -61,5 +61,9 @@ void init_traitant_timer(void (*traitant)(void)){
 
 void enable_timer(){
     __asm__("csrw mie, %0" :: "r"(0x80)); // Active les interruptions timer (bit 7)
-    * (uint64_t) CLINT_TIMER = (uint64_t*) CLINT_TIMER_CMP + TIMER_FREQ/IT_FREQ;
+    *(uint64_t*) CLINT_TIMER = *(uint64_t*) CLINT_TIMER_CMP + TIMER_FREQ/IT_FREQ;
+}
+
+uint32_t nbr_secondes(void){
+    return h/3600 + m/60 + s;
 }
