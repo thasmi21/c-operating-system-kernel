@@ -27,9 +27,17 @@ void kernel_start(void)
     /* initialisations */
     enable_timer();
     init_traitant_timer(mon_traitant);
+    
+    process idle = {0, "idle", ELU, [mettre un bail]};
+    *idle->tab[1] = idle.pile[0];
+    process proc1 = {1, "proc1", ACTIVABLE};
+    *proc1->tab[1] = proc1.pile[0];
+    *proc1->tab[0] = proc1();
+
+    idle();
 
     /* démasquage des interruptions externes */
-    enable_it();
+    //enable_it();
 
     /* on ne doit jamais sortir de kernel_start */
     while (1) {
