@@ -2,32 +2,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <cpu.h>
+#include "processus.h"
 
-#define SIZE_PILE 4096
 #define SIZE_TABLE 2
-#define NOM_MAX_SZ 100
-
-enum etat {
-    ELU,
-    ACTIVABLE
-};
-
-int pid = 0;
-
-struct process {
-    int pid;
-    char nom[NOM_MAX_SZ];
-    enum etat etat; 
-    uint64_t tab[17];
-    uint64_t pile[SIZE_PILE];
-};
-
 struct process table_process[SIZE_TABLE];
+
+extern void ctx_sw(uint64_t a, uint64_t b);
+int pid = 0;
 
 void idle(void)
 {
     printf("[idle] je tente de passer la main a proc1...\n");
-    ctx_sw(&table_process[0].tab, &table_process[1].tab);
+    ctx_sw(*table_process[0].tab, *table_process[1].tab);
 }
 
 void proc1(void)
