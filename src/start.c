@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include "string.h"
 #include "horloge.h"
+#include "processus.h"
 
 extern void mon_traitant(void);
 
@@ -28,11 +29,23 @@ void kernel_start(void)
     enable_timer();
     init_traitant_timer(mon_traitant);
     
-    process idle = {0, "idle", ELU, [mettre un bail]};
-    *idle->tab[1] = idle.pile[0];
-    process proc1 = {1, "proc1", ACTIVABLE};
-    *proc1->tab[1] = proc1.pile[0];
-    *proc1->tab[0] = proc1();
+    struct process idle = {
+        .pid = 0,
+        .name = "idle",
+        .etat = ELU,
+    };
+
+    struct process proc1 = {
+        .pid = 1,
+        .name = "proc1",
+        .etat = ACTIVABLE,
+    };
+
+    proc1.tab[1] = (uint64_t)(proc1.pile + SIZE_PILE);
+    proc1.tab[0] = (uint64_t)&proc1;
+
+    table_process[0] = idle;
+    table_process[1] = proc1;
 
     idle();
 
