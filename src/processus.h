@@ -12,7 +12,7 @@ enum etat {
     ACTIVABLE
 };
 
-struct process {
+struct processus {
     int pid;
     char nom[NOM_MAX_SZ];
     enum etat etat; 
@@ -23,5 +23,9 @@ struct process {
 void idle(void);
 
 void proc1(void);
+
+void init_proc(void);
+
+int new_proc(char *nom, void (*code)(void));
 
 #endif
