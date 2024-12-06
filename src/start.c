@@ -30,10 +30,14 @@ void kernel_start(void)
     init_traitant_timer(mon_traitant);
     
     init_proc();
+    
+    //reprendre les tests/ le debogage à partir de la 
+    int err = new_proc("proc1", &proc1);
+    if (err < 0){
+        printf("Error in start.c/kernel_start : Impossible de créer proc1.\n");
+    }
 
-    new_proc("proc1", &proc1);
-
-    idle();
+    // idle();
 
     /* démasquage des interruptions externes */
     enable_it();
@@ -41,6 +45,7 @@ void kernel_start(void)
     /* on ne doit jamais sortir de kernel_start */
     while (1) {
         /* cette fonction arrete le processeur */
+        affiche_etats();
         hlt();
     }
 }

@@ -5,7 +5,7 @@
 #define SIZE_PILE 4096
 #define NOM_MAX_SZ 100
 
-extern void ctx_sw(uint64_t a, uint64_t b);
+extern void ctx_sw(uint64_t* a, uint64_t* b);
 
 enum etat {
     ELU,
