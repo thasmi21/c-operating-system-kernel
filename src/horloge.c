@@ -16,6 +16,7 @@ extern void mon_traitant(void); //Inclusion de la fonction ASM dans le fichier C
 
 void write_timer(const char *s){
     int len = strlen(s);
+    place_curseur(0, 1280-len);
     for (int i=0; i<len; i++){
         ecrit_car(0, 1280-len+i, s[i]);
     }

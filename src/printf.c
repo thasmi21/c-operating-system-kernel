@@ -46,7 +46,7 @@
 
 #include "stdarg.h"
 #include "doprnt.h"
-#include "console.h"
+//#include "console.h"
 
 /*
  * This is the function called by printf to send its output to the screen. You

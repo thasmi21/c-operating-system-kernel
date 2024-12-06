@@ -37,7 +37,7 @@ void kernel_start(void)
         printf("Error in start.c/kernel_start : Impossible de créer proc1.\n");
     }
 
-    // idle();
+    idle();
 
     /* démasquage des interruptions externes */
     enable_it();

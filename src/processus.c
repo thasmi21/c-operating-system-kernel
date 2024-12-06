@@ -20,8 +20,8 @@ uint32_t temps = 0;
 
 void idle(void)
 {
-    for (int i = 0; i < 2; i++){
-        printf("\n[%s] pid = %i\n", mon_nom(), mon_pid());
+    for (;;){
+        printf("[%s] pid = %i\n", mon_nom(), mon_pid());
         ordonnance();
     }
 
@@ -33,8 +33,8 @@ void idle(void)
 
 void proc1(void)
 {
-    for (int i = 0; i < 2; i++){
-        printf("\n\n[%s] pid = %i\n", mon_nom(), mon_pid());
+    for (;;){
+        printf("\n[%s] pid = %i\n", mon_nom(), mon_pid());
         ordonnance();
     }
 }
@@ -89,7 +89,7 @@ int new_proc(char *nom, void (*code)(void)){
     table_process[pid].tab[1] = (uint64_t)&table_process[pid].pile[SIZE_PILE];
 
     pid += 1;
-
+    
     return pid;
 }
 
@@ -105,9 +105,7 @@ void ordonnance(void){
     // }
 
     struct processus *ancien = elu;
-    printf("ancien=%s\n, ancien->nom");
     elu = &table_process[(elu->pid+1)%pid]; //elu pointe vers le processus après celui actuellement élu dans table_process
-    printf("elu=%s\n, elu->nom\n");
 
     int position = ancien->pid;
     for (int i = 0; i < pid; i++){ //Parcourt tout table_process pour décrémenter les reveils et trouver le prochain processus élu
@@ -123,7 +121,7 @@ void ordonnance(void){
         }
     }
 
-    elu = &table_process[position-1];
+    elu = &table_process[position];
     elu->etat = ELU;
 
     printf("Switch de processus : passage de %s a %s.\n", ancien->nom, elu->nom);
