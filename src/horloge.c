@@ -12,14 +12,17 @@
 
 int interruptions, h, m, s = 0;
 
+extern uint32_t position_curseur_col;
+extern uint32_t position_curseur_lig;
 extern void mon_traitant(void); //Inclusion de la fonction ASM dans le fichier C
 
 void write_timer(const char *s){
+    uint32_t a = position_curseur_lig;
+    uint32_t b = position_curseur_col;
     int len = strlen(s);
     place_curseur(0, 1280-len);
-    for (int i=0; i<len; i++){
-        ecrit_car(0, 1280-len+i, s[i]);
-    }
+    printf("%s", *s);
+    place_curseur(a, b);
 }
 
 void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
@@ -52,6 +55,8 @@ void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
             write_timer(timer);  //Impression de la nouvelle heure dans le format "[HH:MM:SS]"
         }
     }
+
+    ordonnance();
 }
 
 void init_traitant_timer(void (*traitant)(void)){

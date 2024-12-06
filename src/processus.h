@@ -29,11 +29,17 @@ void idle(void);
 //Renvoie la main à idle
 void proc1(void);
 
+//Renvoie la main à idle
+void proc2(void);
+
+//Renvoie la main à idle
+void proc3(void);
+
 //(Ré)initialise le tableau de processus et crée le processus initial idle
 void init_proc(void);
 
 //Créer un nouveau processus dont le registre ra pointe vers la fonction à exécuter 
-int new_proc(char *nom, void (*code)(void));
+int cree_processus(char *nom, void (*code)(void));
 
 //Automatise le changement de processus, en mettant à jour leur état et le pointeur global
 void ordonnance(void);

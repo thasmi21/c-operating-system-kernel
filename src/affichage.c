@@ -5,9 +5,9 @@
 
 #define NB_OCTETS 40960
 
-//Par défaut : curseur en (1,0)
+//Par défaut : curseur en (0,0)
 uint32_t position_curseur_col = 0;
-uint32_t position_curseur_lig = 1;
+uint32_t position_curseur_lig = 0;
 
 
 void pixel(uint32_t x, uint32_t y, uint32_t couleur){
