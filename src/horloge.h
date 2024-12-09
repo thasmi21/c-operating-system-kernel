@@ -3,7 +3,7 @@
 #include <inttypes.h>
 
 //Permet d'écrire une chaîne de caractères en haut à droite de l'écran (position de l'affichage de l'heure)
-void write_timer(const char *s);
+void write_timer(char *s);
 
 //Gère les interruptions timer et actualise l'horloge en conséquence
 void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip);

@@ -16,13 +16,12 @@ extern uint32_t position_curseur_col;
 extern uint32_t position_curseur_lig;
 extern void mon_traitant(void); //Inclusion de la fonction ASM dans le fichier C
 
-void write_timer(const char *s){
-    uint32_t a = position_curseur_lig;
-    uint32_t b = position_curseur_col;
-    int len = strlen(s);
-    place_curseur(0, 1280-len);
-    printf("%s", *s);
-    place_curseur(a, b);
+void write_timer(char *s){
+    // uint32_t a = position_curseur_lig;
+    // uint32_t b = position_curseur_col;
+    place_curseur(0, 1270);
+    printf("%s", s);
+    //place_curseur(a, b);
 }
 
 void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
@@ -56,10 +55,12 @@ void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
         }
     }
 
-    ordonnance();
+    //ordonnance();
 }
 
 void init_traitant_timer(void (*traitant)(void)){
+    place_curseur(0, 1270);
+    printf("[00:00:00]");
     __asm__("csrw mtvec, %0" :: "r"(traitant)); //Renseigne l'adresse de l'interruption dans le registre mtvec
 }
 
