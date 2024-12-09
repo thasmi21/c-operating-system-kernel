@@ -4,6 +4,7 @@
 #include "font.h"
 #include "string.h"
 #include "affichage.h"
+#include "processus.h"
 
 #define IT_FREQ 20
 #define TIMER_FREQ 10000000
@@ -54,7 +55,7 @@ void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
             char timer[11];
             sprintf(timer, "[%02d:%02d:%02d]", h, m, s);
             write_timer(timer);  //Impression de la nouvelle heure dans le format "[HH:MM:SS]"
-            //decrement_reveil();
+            decrement_reveil();
         }
     }
 

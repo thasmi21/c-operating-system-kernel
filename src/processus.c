@@ -29,7 +29,6 @@ const char* etat_str[] = {
 void idle(void){
 
     for (;;) {
-        printf("[%s] pid = %i\n", mon_nom(), mon_pid());
         enable_it();
         hlt();
         disable_it();
@@ -39,9 +38,12 @@ void idle(void){
 void proc1(void){
     
     for (;;) {
-        printf("[%s] pid = %i\n", mon_nom(), mon_pid());
         enable_it();
-        hlt();
+        printf("[temps = %u] processus %s pid = %i\n",
+               nbr_secondes(),
+               mon_nom(),
+               mon_pid());
+        dors(2);
         disable_it();
     }
 }
@@ -49,9 +51,12 @@ void proc1(void){
 void proc2(void) {
     
     for (;;) {
-        printf("[%s] pid = %i\n", mon_nom(), mon_pid());
         enable_it();
-        hlt();
+        printf("[temps = %u] processus %s pid = %i\n",
+               nbr_secondes(),
+               mon_nom(),
+               mon_pid());
+        dors(3);
         disable_it();
     }
 }
@@ -59,9 +64,12 @@ void proc2(void) {
 void proc3(void) {
     
     for (;;) {
-        printf("[%s] pid = %i\n", mon_nom(), mon_pid());
         enable_it();
-        hlt();
+        printf("[temps = %u] processus %s pid = %i\n",
+               nbr_secondes(),
+               mon_nom(),
+               mon_pid());
+        dors(5);
         disable_it();
     }
 }
