@@ -54,10 +54,12 @@ void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
             char timer[11];
             sprintf(timer, "[%02d:%02d:%02d]", h, m, s);
             write_timer(timer);  //Impression de la nouvelle heure dans le format "[HH:MM:SS]"
+            //decrement_reveil();
         }
     }
 
-    //ordonnance();
+    ordonnance();  
+    
 }
 
 void init_traitant_timer(void (*traitant)(void)){

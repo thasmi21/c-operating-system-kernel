@@ -14,6 +14,8 @@ enum etat {
     MORT
 };
 
+extern const char* etat_to_string[];
+
 struct processus {
     int pid;
     char nom[NOM_MAX_SZ];
@@ -52,6 +54,8 @@ char *mon_nom(void);
 
 //Fait dormir le processus élu pendant nbr_secs secondes
 void dors(uint32_t nbr_secs);
+
+void decrement_reveil();
 
 //Met fin à un processus en le declarant comme MORT
 void end_proc(void);
