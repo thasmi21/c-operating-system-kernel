@@ -28,30 +28,21 @@ void idle(void){
 
 void proc1(void){
     for (;;) {
-        printf("[temps = %u] processus %s pid = %i\n",
-               nbr_secondes(),
-               mon_nom(),
-               mon_pid());
+        printf("[temps = %u] processus %s pid = %i\n", nbr_secondes(), mon_nom(), mon_pid());
         dors(2);
     }
 }
 
 void proc2(void) {
     for (;;) {
-        printf("[temps = %u] processus %s pid = %i\n",
-               nbr_secondes(),
-               mon_nom(),
-               mon_pid());
+        printf("[temps = %u] processus %s pid = %i\n", nbr_secondes(), mon_nom(), mon_pid());
         dors(3);
     }
 }
 
 void proc3(void) {
     for (;;) {
-        printf("[temps = %u] processus %s pid = %i\n",
-               nbr_secondes(),
-               mon_nom(),
-               mon_pid());
+        printf("[temps = %u] processus %s pid = %i\n", nbr_secondes(), mon_nom(), mon_pid());
         dors(5);
     }
 }

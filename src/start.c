@@ -29,22 +29,22 @@ void kernel_start(void)
     enable_timer();
     init_traitant_timer(mon_traitant);
     
-    // init_proc();
+    init_proc();
 
-    // int err = cree_processus("proc1", &proc1);
-    // if (err < 0){
-    //     printf("Error in start.c/kernel_start : Impossible de créer proc1.\n");
-    // }
-    // err = cree_processus("proc2", &proc2);
-    // if (err < 0){
-    //     printf("Error in start.c/kernel_start : Impossible de créer proc2.\n");
-    // }
-    // err = cree_processus("proc3", &proc3);
-    // if (err < 0){
-    //     printf("Error in start.c/kernel_start : Impossible de créer proc3.\n");
-    // }
+    int err = cree_processus("proc1", &proc1);
+    if (err < 0){
+        printf("Error in start.c/kernel_start : Impossible de créer proc1.\n");
+    }
+    err = cree_processus("proc2", &proc2);
+    if (err < 0){
+        printf("Error in start.c/kernel_start : Impossible de créer proc2.\n");
+    }
+    err = cree_processus("proc3", &proc3);
+    if (err < 0){
+        printf("Error in start.c/kernel_start : Impossible de créer proc3.\n");
+    }
 
-    // idle();
+    idle();
 
     /* démasquage des interruptions externes */
     enable_it();
@@ -52,7 +52,6 @@ void kernel_start(void)
     /* on ne doit jamais sortir de kernel_start */
     while (1) {
         /* cette fonction arrete le processeur */
-        //affiche_etats();
         hlt();
     }
 }
