@@ -58,7 +58,7 @@ void dors(uint32_t nbr_secs);
 void decrement_reveil();
 
 //Met fin à un processus en le declarant comme MORT
-void end_proc(void);
+void fin_processus(void);
 
 //Affiche en haut à gauche tous les processus et leur état (+ temps restant avant réveil si endormi) et le nombre de processus disponibles
 void affiche_etats(void);

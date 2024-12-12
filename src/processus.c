@@ -42,40 +42,41 @@ void idle(void){
 
 void proc1(void){
     
-    for (;;) {
+    for (int i=0; i<3; i++) {
         printf("[temps = %u] processus %s pid = %i\n",
                nbr_secondes(),
                mon_nom(),
                mon_pid());
-        //dors(8);
+        dors(8);
     }
-    //fin_processus();
+    fin_processus();
 }
 
 void proc2(void) {
     
-    for (;;) {
+    for (int i=0; i<3; i++) {
         printf("[temps = %u] processus %s pid = %i\n",
                nbr_secondes(),
                mon_nom(),
                mon_pid());
-        //dors(3);
+        dors(3);
     }
+    fin_processus();
 }
 
 void proc3(void) {
     
-    for (;;) {
+    for (int i=0; i<1; i++) {
         printf("[temps = %u] processus %s pid = %i\n",
                nbr_secondes(),
                mon_nom(),
                mon_pid());
-        //dors(5);
+        dors(5);
     }
+    fin_processus();
 }
 
 void init_proc(void){
-    //Besoin de réinitialiser table_process ?
     strcpy(table_process[0].nom, "idle");
     table_process[0].pid = 0;
     table_process[0].etat = ELU;
@@ -85,7 +86,6 @@ void init_proc(void){
 
     pid = 1;
     elu = &table_process[0];
-    affiche_etats();
 }
 
 int cree_processus(char *nom, void (*code)(void)){
@@ -107,7 +107,6 @@ int cree_processus(char *nom, void (*code)(void)){
     table_process[pid].tab[1] = (uint64_t)&table_process[pid].pile[SIZE_PILE];
 
     pid += 1;
-    affiche_etats();
     
     return pid;
 }
@@ -191,6 +190,7 @@ void fin_processus(void){
     }
     else {
         table_process[mon_pid()].etat = MORT;
+        printf("%s, %s : \n", table_process[mon_pid()].nom, etat_str[table_process[mon_pid()].etat]);
         ordonnance();
     }
 }
@@ -201,7 +201,10 @@ void affiche_etats(void){
     place_curseur(0,0);
     printf("Etat des processus : ");
     for (int i = 0; i < pid; i++){
-        printf("%s: %s, ", table_process[i].nom, etat_str[table_process[i].etat]);
+        printf("%s: %s ", table_process[i].nom, etat_str[table_process[i].etat]);
     }
+
+    printf("                 ");
+
     check_curseur(a, b);
 }
