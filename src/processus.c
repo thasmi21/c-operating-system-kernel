@@ -19,7 +19,7 @@ extern void ctx_sw(uint64_t* a, uint64_t* b);
 extern uint32_t position_curseur_col;
 extern uint32_t position_curseur_lig;
 
-int pid; nb_proc_actifs = 0;
+int pid = 0;
 uint32_t temps = 0;
 
 const char* etat_str[] = {
@@ -47,9 +47,9 @@ void proc1(void){
                nbr_secondes(),
                mon_nom(),
                mon_pid());
-        dors(8);
+        //dors(8);
     }
-
+    //fin_processus();
 }
 
 void proc2(void) {
@@ -59,7 +59,7 @@ void proc2(void) {
                nbr_secondes(),
                mon_nom(),
                mon_pid());
-        dors(3);
+        //dors(3);
     }
 }
 
@@ -70,7 +70,7 @@ void proc3(void) {
                nbr_secondes(),
                mon_nom(),
                mon_pid());
-        dors(5);
+        //dors(5);
     }
 }
 
@@ -84,13 +84,13 @@ void init_proc(void){
     table_process[0].reveil = 0;
 
     pid = 1;
-    nb_proc_actifs = 1;
     elu = &table_process[0];
+    affiche_etats();
 }
 
 int cree_processus(char *nom, void (*code)(void)){
 
-    if (nb_proc_actifs >= SIZE_TABLE){
+    if (pid >= SIZE_TABLE){
         printf("Error in processus.c/new_proc : Nombre de processus maximum atteint, la création a echoué.\n");
         return -1;
     }
@@ -107,7 +107,7 @@ int cree_processus(char *nom, void (*code)(void)){
     table_process[pid].tab[1] = (uint64_t)&table_process[pid].pile[SIZE_PILE];
 
     pid += 1;
-    nb_proc_actifs += 1;
+    affiche_etats();
     
     return pid;
 }
@@ -120,7 +120,7 @@ void ordonnance(void){
         ancien->etat = ACTIVABLE;
     }
     int i = 1;
-    while (i < nb_proc_actifs && i != -1){//Parcourt tout table_process pour décrémenter les reveils et trouver le prochain processus élu
+    while (i < pid && i != -1){//Parcourt tout table_process pour décrémenter les reveils et trouver le prochain processus élu
         if (elu->etat != ACTIVABLE){
             i += 1;
             elu = &table_process[(elu->pid+1)%pid];
@@ -189,12 +189,8 @@ void fin_processus(void){
     if (mon_pid() == 0){
         printf("Error in processus.c/fin_processus : fin_processus() appelé pour le processus IDLE.\n");
     }
-    if (nb_proc_actifs < 2){
-        printf("Error in processus.c/fin_processus : fin_processus() appelé alors qu'il reste 1 seul processus actif.\n");
-    }
     else {
-        elu->etat = MORT;
-        nb_proc_actifs -= 1;
+        table_process[mon_pid()].etat = MORT;
         ordonnance();
     }
 }
@@ -205,23 +201,7 @@ void affiche_etats(void){
     place_curseur(0,0);
     printf("Etat des processus : ");
     for (int i = 0; i < pid; i++){
-        switch (table_process[i].etat){
-        case ELU:
-            printf("%s: ELU, ", table_process[i].nom);
-            break;
-        case ACTIVABLE:
-            printf("%s: ACTIVABLE, ", table_process[i].nom);
-            break;
-        case ENDORMI:
-            printf("%s: ENDORMI, ", table_process[i].nom);
-            break;
-        case MORT:
-            printf("%s: MORT, ", table_process[i].nom);
-            break;
-        default:
-            printf("%s: UNKNOWN, ", table_process[i].nom);
-            break;
-        }
+        printf("%s: %s, ", table_process[i].nom, etat_str[table_process[i].etat]);
     }
     check_curseur(a, b);
 }
