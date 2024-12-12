@@ -27,25 +27,26 @@ const char* etat_str[] = {
 };
 
 void idle(void){
-
+    
     for (;;) {
+        printf("IDLE initialise\n");
         enable_it();
         hlt();
         disable_it();
     }
+    
 }
 
 void proc1(void){
     
     for (;;) {
-        enable_it();
         printf("[temps = %u] processus %s pid = %i\n",
                nbr_secondes(),
                mon_nom(),
                mon_pid());
-        dors(2);
-        disable_it();
+        dors(4);
     }
+
 }
 
 void proc2(void) {
@@ -114,7 +115,9 @@ void ordonnance(void){
 
     struct processus *ancien = elu;
     elu = &table_process[(elu->pid+1)%pid]; //elu pointe vers le processus après celui actuellement élu dans table_process
-    
+    if (ancien->etat == ELU){
+        ancien->etat = ACTIVABLE;
+    }
     int i = 1;
     while (i < pid && i != -1){//Parcourt tout table_process pour décrémenter les reveils et trouver le prochain processus élu
         if (elu->etat != ACTIVABLE){
@@ -122,7 +125,6 @@ void ordonnance(void){
             elu = &table_process[(elu->pid+1)%pid];
         }
         else {
-            ancien->etat = ACTIVABLE;
             elu->etat = ELU;
             i = -1;
         }
@@ -159,6 +161,8 @@ void dors(uint32_t nbr_secs){
     else {
         elu->reveil = nbr_secs;
         elu->etat = ENDORMI;
+        printf("%s s'endort pendant %d secondes.\n", elu->nom, elu->reveil);
+        ordonnance();
     }
 }
 
@@ -167,6 +171,7 @@ void decrement_reveil(){
 
         if (table_process[i].reveil > 0){
             table_process[i].reveil -=1;
+            printf("%s dort pendant encore %d secondes.\n", table_process[i].nom, table_process[i].reveil);
             if (table_process[i].reveil == 0){
                 table_process[i].etat = ACTIVABLE;
             }

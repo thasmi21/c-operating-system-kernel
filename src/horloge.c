@@ -20,11 +20,10 @@ extern void mon_traitant(void); //Inclusion de la fonction ASM dans le fichier C
 void write_timer(char *s){
     uint32_t a = position_curseur_lig;
     uint32_t b = position_curseur_col;
-    //place_curseur(0, 159);
     for (int i = 0; i < 10; i++){
         ecrit_car(0, 150+i, s[i]);
     }
-    //place_curseur(a, b);
+    place_curseur(a+1, b);
 }
 
 void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
