@@ -78,7 +78,7 @@ void init_proc(void){
 
 int cree_processus(char *nom, void (*code)(void)){
 
-    if (pid >= SIZE_TABLE){
+    if (pid > SIZE_TABLE){
         if (nb_proc_actifs == SIZE_TABLE){
             printf("Error in processus.c/cree_processus : trop de processus déjà actifs.\n");
             return -1;
@@ -150,7 +150,7 @@ void affiche_etats(void){
     uint32_t a = position_curseur_lig;
     place_curseur(0,0);
     printf("Etat des processus : ");
-    for (int i = 0; i < pid; i++){
+    for (int i = 0; i <= pid; i++){
         printf("%s: %s ", table_process[i].nom, get_etat(table_process[i].etat));
     }
 

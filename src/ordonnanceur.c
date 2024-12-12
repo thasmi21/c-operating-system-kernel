@@ -9,15 +9,15 @@ extern int pid;
 void ordonnance(void){
 
     struct processus *ancien = elu;
-    elu = &table_process[(elu->pid+1)%pid]; //elu pointe vers le processus après celui actuellement élu dans table_process
+    elu = &table_process[(elu->pid+1)%(pid+1)]; //elu pointe vers le processus après celui actuellement élu dans table_process
     if (ancien->etat == ELU){
         ancien->etat = ACTIVABLE;
     }
-    int i = 1;
-    while (i < pid && i != -1){//Parcourt tout table_process pour décrémenter les reveils et trouver le prochain processus élu
+    int i = 0;
+    while (i <= pid && i != -1){//Parcourt tout table_process pour décrémenter les reveils et trouver le prochain processus élu
         if (elu->etat != ACTIVABLE){
             i += 1;
-            elu = &table_process[(elu->pid+1)%pid];
+            elu = &table_process[(elu->pid+1)%(pid+1)];
         }
         else {
             elu->etat = ELU;
@@ -57,7 +57,7 @@ void dors(uint32_t nbr_secs){
 }
 
 void decrement_reveil(){
-    for (int i = 0; i < pid; i++){
+    for (int i = 0; i <= pid; i++){
 
         if (table_process[i].reveil > 0){
             table_process[i].reveil -=1;
