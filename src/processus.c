@@ -4,6 +4,7 @@ struct processus table_process[SIZE_TABLE];
 struct processus* elu;
 
 int pid = 0;
+int nb_proc_actifs = 0;
 
 const char* get_etat(enum etat e){
     switch (e) {
@@ -22,7 +23,6 @@ void idle(void){
         hlt();
         disable_it();
     }
-    
 }
 
 
@@ -40,7 +40,7 @@ void proc1(void){
 
 void proc2(void) {
     
-    for (int i=0; i<1; i++) {
+    for (int i=0; i<2; i++) {
         printf("[temps = %u] processus %s pid = %i\n",
                nbr_secondes(),
                mon_nom(),
@@ -52,7 +52,7 @@ void proc2(void) {
 
 void proc3(void) {
     
-    for (int i=0; i<1; i++) {
+    for (int i=0; i<3; i++) {
         printf("[temps = %u] processus %s pid = %i\n",
                nbr_secondes(),
                mon_nom(),
@@ -70,7 +70,8 @@ void init_proc(void){
     table_process[0].tab[1] = (uint64_t)&table_process[0].pile[SIZE_PILE];
     table_process[0].reveil = 0;
 
-    pid = 1;
+    pid = 0;
+    nb_proc_actifs = 1;
     elu = &table_process[0];
 }
 
@@ -78,14 +79,31 @@ void init_proc(void){
 int cree_processus(char *nom, void (*code)(void)){
 
     if (pid >= SIZE_TABLE){
-        printf("Error in processus.c/new_proc : Nombre de processus maximum atteint, la création a echoué.\n");
-        return -1;
+        if (nb_proc_actifs == SIZE_TABLE){
+            printf("Error in processus.c/cree_processus : trop de processus déjà actifs.\n");
+            return -1;
+        }
+        else {
+            int i=1;
+            while (table_process[i].etat != MORT && i < nb_proc_actifs){
+                i += 1;
+            }
+            if (i == nb_proc_actifs){
+                printf("Error in processus.c/cree_processus : pas de processus mort mais nb_proc_actifs == SIZE_TABLE.\n");
+                return -1;
+            }
+            else {
+                pid = i;
+            }
+        }
     }
 
     if (sizeof(*nom) > NOM_MAX_SZ){
-        printf("Error in processus.c/new_proc : Nom de processus trop long (taille maximale = 100 caractères).\n");
+        printf("Error in processus.c/cree_processus : Nom de processus trop long (taille maximale = 100 caractères).\n");
         return -1;
     }
+
+    pid += 1;
 
     table_process[pid].pid = pid;
     strcpy(table_process[pid].nom, nom);
@@ -94,7 +112,7 @@ int cree_processus(char *nom, void (*code)(void)){
     table_process[pid].tab[4] = (uint64_t)code;
     table_process[pid].tab[1] = (uint64_t)&table_process[pid].pile[SIZE_PILE];
 
-    pid += 1;
+    nb_proc_actifs += 1;
     
     return pid;
 }
@@ -122,6 +140,7 @@ void fin_processus(void){
     else {
         table_process[mon_pid()].etat = MORT;
         printf("%s, %s : \n", table_process[mon_pid()].nom, get_etat(table_process[mon_pid()].etat));
+        nb_proc_actifs -= 1;
         ordonnance();
     }
 }

@@ -28,14 +28,14 @@ void kernel_start(void)
     if (err < 0){
         printf("Error in start.c/kernel_start : Impossible de créer proc1.\n");
     }
-    // err = cree_processus("proc2", &proc2);
-    // if (err < 0){
-    //     printf("Error in start.c/kernel_start : Impossible de créer proc2.\n");
-    // }
-    // err = cree_processus("proc3", &proc3);
-    // if (err < 0){
-    //     printf("Error in start.c/kernel_start : Impossible de créer proc3.\n");
-    // }
+    err = cree_processus("proc2", &proc2);
+    if (err < 0){
+        printf("Error in start.c/kernel_start : Impossible de créer proc2.\n");
+    }
+    err = cree_processus("proc3", &proc3);
+    if (err < 0){
+        printf("Error in start.c/kernel_start : Impossible de créer proc3.\n");
+    }
     
     idle();
 
