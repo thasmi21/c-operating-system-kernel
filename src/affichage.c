@@ -54,7 +54,12 @@ void ecrit_car(uint32_t lig, uint32_t col, char c){
     }
 
     //Repositionnement du curseur
-    place_curseur(lig,col+1);
+    if (col==159){
+        place_curseur(lig+1, 0);
+    }
+    else {
+        place_curseur(lig,col+1);
+    }
 }
 
 void efface_ecran(void){
