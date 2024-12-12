@@ -16,7 +16,10 @@ struct processus* elu;
 
 extern const char* etat_str[];
 extern void ctx_sw(uint64_t* a, uint64_t* b);
-int pid = 0;
+extern uint32_t position_curseur_col;
+extern uint32_t position_curseur_lig;
+
+int pid; nb_proc_actifs = 0;
 uint32_t temps = 0;
 
 const char* etat_str[] = {
@@ -81,12 +84,13 @@ void init_proc(void){
     table_process[0].reveil = 0;
 
     pid = 1;
+    nb_proc_actifs = 1;
     elu = &table_process[0];
 }
 
 int cree_processus(char *nom, void (*code)(void)){
 
-    if (pid >= SIZE_TABLE){
+    if (nb_proc_actifs >= SIZE_TABLE){
         printf("Error in processus.c/new_proc : Nombre de processus maximum atteint, la création a echoué.\n");
         return -1;
     }
@@ -103,6 +107,7 @@ int cree_processus(char *nom, void (*code)(void)){
     table_process[pid].tab[1] = (uint64_t)&table_process[pid].pile[SIZE_PILE];
 
     pid += 1;
+    nb_proc_actifs += 1;
     
     return pid;
 }
@@ -115,7 +120,7 @@ void ordonnance(void){
         ancien->etat = ACTIVABLE;
     }
     int i = 1;
-    while (i < pid && i != -1){//Parcourt tout table_process pour décrémenter les reveils et trouver le prochain processus élu
+    while (i < nb_proc_actifs && i != -1){//Parcourt tout table_process pour décrémenter les reveils et trouver le prochain processus élu
         if (elu->etat != ACTIVABLE){
             i += 1;
             elu = &table_process[(elu->pid+1)%pid];
@@ -127,6 +132,7 @@ void ordonnance(void){
     }
 
     if (i == -1){
+        affiche_etats();
         printf("Switch de processus : passage de %s a %s.\n", ancien->nom, elu->nom);
         ctx_sw(ancien->tab, elu->tab);
     }
@@ -135,6 +141,7 @@ void ordonnance(void){
         ancien->etat = ACTIVABLE;
         elu = &table_process[0];
         elu->etat = ELU;
+        affiche_etats();
         ctx_sw(ancien->tab, elu->tab);
     }
 }
@@ -178,40 +185,43 @@ void decrement_reveil(){
     }
 }
 
-void end_proc(void){
-//     if (mon_pid() == 0){
-//         printf("Error in processus.c/end_proc : end_proc() appelé pour le processus IDLE.\n");
-//     }
-//     else {
-//         elu->etat = MORT;
-//         //Décrémenter pid de 1 ? Impose de replacer les éléments de table_process pour que leur PID respecte leur position
-//         //Mais dans ce cas pourquoi le marquer comme MORT alors qu'il va disparaître -> inutile
-//         ordonnance();
-//     }
+void fin_processus(void){
+    if (mon_pid() == 0){
+        printf("Error in processus.c/fin_processus : fin_processus() appelé pour le processus IDLE.\n");
+    }
+    if (nb_proc_actifs < 2){
+        printf("Error in processus.c/fin_processus : fin_processus() appelé alors qu'il reste 1 seul processus actif.\n");
+    }
+    else {
+        elu->etat = MORT;
+        nb_proc_actifs -= 1;
+        ordonnance();
+    }
 }
 
 void affiche_etats(void){
-//     //Vérifier que ca s'écrit bien sur la 1ère ligne
-//     place_curseur(0,0);
-//     printf("Etat des processus : ");
-//     for (int i = 0; i < pid; i++){
-//         switch (elu->etat){
-//         case ELU:
-//             printf("%s: ELU, ", elu->nom);
-//             break;
-//         case ACTIVABLE:
-//             printf("%s: ACTIVABLE, ", elu->nom);
-//             break;
-//         case ENDORMI:
-//             printf("%s: ENDORMI(%d), ", elu->nom, elu->reveil);
-//             break;
-//         case MORT:
-//             printf("%s: MORT, ", elu->nom);
-//             break;
-//         default:
-//             printf("%s: UNKNOWN, ", elu->nom);
-//             break;
-//         }
-//     }
-//     //printf("%d processus disponibles.\n", SIZE_TABLE - pid);
+    uint32_t a = position_curseur_lig;
+    uint32_t b = position_curseur_col;
+    place_curseur(0,0);
+    printf("Etat des processus : ");
+    for (int i = 0; i < pid; i++){
+        switch (table_process[i].etat){
+        case ELU:
+            printf("%s: ELU, ", table_process[i].nom);
+            break;
+        case ACTIVABLE:
+            printf("%s: ACTIVABLE, ", table_process[i].nom);
+            break;
+        case ENDORMI:
+            printf("%s: ENDORMI, ", table_process[i].nom);
+            break;
+        case MORT:
+            printf("%s: MORT, ", table_process[i].nom);
+            break;
+        default:
+            printf("%s: UNKNOWN, ", table_process[i].nom);
+            break;
+        }
+    }
+    check_curseur(a, b);
 }
