@@ -44,7 +44,7 @@ void proc1(void){
                nbr_secondes(),
                mon_nom(),
                mon_pid());
-        dors(4);
+        dors(8);
     }
 
 }
@@ -52,26 +52,22 @@ void proc1(void){
 void proc2(void) {
     
     for (;;) {
-        enable_it();
         printf("[temps = %u] processus %s pid = %i\n",
                nbr_secondes(),
                mon_nom(),
                mon_pid());
         dors(3);
-        disable_it();
     }
 }
 
 void proc3(void) {
     
     for (;;) {
-        enable_it();
         printf("[temps = %u] processus %s pid = %i\n",
                nbr_secondes(),
                mon_nom(),
                mon_pid());
         dors(5);
-        disable_it();
     }
 }
 

@@ -23,7 +23,7 @@ void write_timer(char *s){
     for (int i = 0; i < 10; i++){
         ecrit_car(0, 150+i, s[i]);
     }
-    place_curseur(a+1, b);
+    check_curseur(a, b);
 }
 
 void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){

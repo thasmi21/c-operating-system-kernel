@@ -34,6 +34,20 @@ void place_curseur(uint32_t lig, uint32_t col){
     position_curseur_col = col;
 }
 
+void check_curseur(uint32_t lig, uint32_t col){
+    if (col==159){
+        if (lig == 89){
+            defilement();
+        }
+        else {
+            place_curseur(lig+1, 0);
+        }
+    }
+    else {
+        place_curseur(lig,col+1);
+    }
+}
+
 void ecrit_car(uint32_t lig, uint32_t col, char c){
 
     //Effacement de pixels potentiels à l'emplacement du caractère
@@ -54,13 +68,9 @@ void ecrit_car(uint32_t lig, uint32_t col, char c){
     }
 
     //Repositionnement du curseur
-    if (col==159){
-        place_curseur(lig+1, 0);
-    }
-    else {
-        place_curseur(lig,col+1);
-    }
+    check_curseur(lig, col);
 }
+
 
 void efface_ecran(void){
     
