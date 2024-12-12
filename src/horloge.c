@@ -1,15 +1,4 @@
-#include <inttypes.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "font.h"
-#include "string.h"
-#include "affichage.h"
-#include "processus.h"
-
-#define IT_FREQ 20
-#define TIMER_FREQ 10000000
-#define CLINT_TIMER 0x0200bff8
-#define CLINT_TIMER_CMP 0x02004000
+#include "include.h"
 
 int interruptions, h, m, s = 0;
 
@@ -62,11 +51,13 @@ void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
     
 }
 
+
 void init_traitant_timer(void (*traitant)(void)){
     place_curseur(0, 150);
     printf("[00:00:00]");
     __asm__("csrw mtvec, %0" :: "r"(traitant)); //Renseigne l'adresse de l'interruption dans le registre mtvec
 }
+
 
 void enable_timer(){
 
@@ -78,6 +69,7 @@ void enable_timer(){
 
     *(uint64_t*) CLINT_TIMER_CMP = *(uint64_t*) CLINT_TIMER + TIMER_FREQ/IT_FREQ;
 }
+
 
 uint32_t nbr_secondes(void){
     return h/3600 + m/60 + s;

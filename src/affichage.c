@@ -1,13 +1,8 @@
-#include <inttypes.h>
-#include <stdlib.h>
-#include "font.h"
-#include "string.h"
-
-#define NB_OCTETS 40960
+#include "include.h"
 
 //Par défaut : curseur en (0,0)
-uint32_t position_curseur_col = 0;
-uint32_t position_curseur_lig = 1;
+extern uint32_t position_curseur_col;
+extern uint32_t position_curseur_lig;
 
 
 void pixel(uint32_t x, uint32_t y, uint32_t couleur){
@@ -17,36 +12,6 @@ void pixel(uint32_t x, uint32_t y, uint32_t couleur){
     *ptr = couleur;
 }
 
-void place_curseur(uint32_t lig, uint32_t col){
-
-    //Effacement du curseur précédent
-    for (int i = 0; i < 8; i++){
-        pixel(position_curseur_col*8 +i, position_curseur_lig*8+7, 0x00000000);
-    }
-
-    //Placement du nouveau curseur à lig et col
-    for (int i = 0; i < 8; i++){
-        pixel(col*8+i, lig*8+7, 0x0FFFFFFF);
-    }
-
-    //Mise à jour de ses nouvelles coordonnées
-    position_curseur_lig = lig; 
-    position_curseur_col = col;
-}
-
-void check_curseur(uint32_t lig, uint32_t col){
-    if (col==159){
-        if (lig == 89){
-            defilement();
-        }
-        else {
-            place_curseur(lig+1, 0);
-        }
-    }
-    else {
-        place_curseur(lig,col+1);
-    }
-}
 
 void ecrit_car(uint32_t lig, uint32_t col, char c){
 
@@ -71,42 +36,6 @@ void ecrit_car(uint32_t lig, uint32_t col, char c){
     check_curseur(lig, col);
 }
 
-
-void efface_ecran(void){
-    
-    //Parcours de tout l'ecran
-    for (int i = 0; i < 720; i++){
-        for (int j = 0; j < 1280; j++){
-            pixel(j, i, 0x00000000); //Coloriage du pixel en noir
-        }
-    }
-
-    //Réinitialisation de la position du curseur
-    place_curseur(1, 0);
-}
-
-void defilement(void){
-
-    //Sinon, le curseur est toujours considéré comme à la ligne 89 et donc n'efface pas celui qui a été remonté ligne 88
-    position_curseur_lig -= 1;
-
-    //Déplacement des lignes 2 à 89 aux positions 1 à 88
-    for (int i = 1; i < 89; i++){
-        uint32_t* dest = (uint32_t*) (0x80000000 + i*8*4*1280);
-        uint32_t* src = (uint32_t*) (0x80000000 + (i+1)*4*8*1280);
-        memmove(dest, src, NB_OCTETS);
-    }
-
-    //Effacement de la dernière ligne
-    for (int j = 0; j < 8; j++){
-        for (int i = 0; i < 1280; i++){
-            pixel(i, 712 + j, 0x00000000);
-        }
-    }
-
-    //Replacement du curseur
-    place_curseur(89, 0);
-}
 
 void traite_car(char c){
 
@@ -151,3 +80,40 @@ void console_putbytes(const char *s, int len){
     }
 }
 
+
+void efface_ecran(void){
+    
+    //Parcours de tout l'ecran
+    for (int i = 0; i < 720; i++){
+        for (int j = 0; j < 1280; j++){
+            pixel(j, i, 0x00000000); //Coloriage du pixel en noir
+        }
+    }
+
+    //Réinitialisation de la position du curseur
+    place_curseur(1, 0);
+}
+
+
+void defilement(void){
+
+    //Sinon, le curseur est toujours considéré comme à la ligne 89 et donc n'efface pas celui qui a été remonté ligne 88
+    position_curseur_lig -= 1;
+
+    //Déplacement des lignes 2 à 89 aux positions 1 à 88
+    for (int i = 1; i < 89; i++){
+        uint32_t* dest = (uint32_t*) (0x80000000 + i*8*4*1280);
+        uint32_t* src = (uint32_t*) (0x80000000 + (i+1)*4*8*1280);
+        memmove(dest, src, NB_OCTETS);
+    }
+
+    //Effacement de la dernière ligne
+    for (int j = 0; j < 8; j++){
+        for (int i = 0; i < 1280; i++){
+            pixel(i, 712 + j, 0x00000000);
+        }
+    }
+
+    //Replacement du curseur
+    place_curseur(89, 0);
+}

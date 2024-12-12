@@ -1,12 +1,11 @@
 #ifndef _PROCESSUS_H_
 #define _PROCESSUS_H_
-#include <inttypes.h>
 
-#define SIZE_PILE 4096
-#define NOM_MAX_SZ 100
+#include "include.h"
 
 extern void ctx_sw(uint64_t* a, uint64_t* b);
 
+//Liste des états accessibles par un processus au cours de son exécution
 enum etat {
     ELU,
     ACTIVABLE,
@@ -14,8 +13,7 @@ enum etat {
     MORT
 };
 
-extern const char* etat_to_string[];
-
+//Structure d'un processus
 struct processus {
     int pid;
     char nom[NOM_MAX_SZ];
@@ -25,16 +23,19 @@ struct processus {
     int reveil; 
 };
 
-//Passe la main à proc1
+//Permet d'afficher l'état d'un processus sous forme de string
+const char* get_etat();
+
+//Gère les interruptions et passe la main 
 void idle(void);
 
-//Renvoie la main à idle
+//Passe la main 
 void proc1(void);
 
-//Renvoie la main à idle
+//Renvoie la main
 void proc2(void);
 
-//Renvoie la main à idle
+//Renvoie la main
 void proc3(void);
 
 //(Ré)initialise le tableau de processus et crée le processus initial idle
@@ -43,19 +44,11 @@ void init_proc(void);
 //Créer un nouveau processus dont le registre ra pointe vers la fonction à exécuter 
 int cree_processus(char *nom, void (*code)(void));
 
-//Automatise le changement de processus, en mettant à jour leur état et le pointeur global
-void ordonnance(void);
-
 //Renvoie le pid du processus actif
 int32_t mon_pid(void);
 
 //Renvoie le nom du processus actif
 char *mon_nom(void);
-
-//Fait dormir le processus élu pendant nbr_secs secondes
-void dors(uint32_t nbr_secs);
-
-void decrement_reveil();
 
 //Met fin à un processus en le declarant comme MORT
 void fin_processus(void);

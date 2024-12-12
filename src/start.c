@@ -1,15 +1,6 @@
-#include <inttypes.h>
-#include <stdio.h>
-#include <cpu.h>
-#include <stddef.h>
-#include "string.h"
-#include "horloge.h"
-#include "processus.h"
-//#include "ordonnanceur.h"
+#include "include.h"
 
 extern void mon_traitant(void);
-extern uint32_t position_curseur_col;
-extern uint32_t position_curseur_lig;
 
 /* on peut s'entrainer a utiliser GDB avec ce code de base */
 /* par exemple afficher les valeurs de n et res avec la commande display */
@@ -33,29 +24,18 @@ void kernel_start(void)
     
     init_proc();
 
-    // char str[160];
-
-    // // Remplis le tableau avec des caractères choisis (par exemple 'A')
-    // for (int i = 0; i < 159; i++) {
-    //     str[i] = 'A'; // Remplir avec 'A'
-    // }
-
-    // // Affiche la chaîne
-    // place_curseur(50,0);
-    // printf("%s", str);
-
     int err = cree_processus("proc1", &proc1);
     if (err < 0){
         printf("Error in start.c/kernel_start : Impossible de créer proc1.\n");
     }
-    err = cree_processus("proc2", &proc2);
-    if (err < 0){
-        printf("Error in start.c/kernel_start : Impossible de créer proc2.\n");
-    }
-    err = cree_processus("proc3", &proc3);
-    if (err < 0){
-        printf("Error in start.c/kernel_start : Impossible de créer proc3.\n");
-    }
+    // err = cree_processus("proc2", &proc2);
+    // if (err < 0){
+    //     printf("Error in start.c/kernel_start : Impossible de créer proc2.\n");
+    // }
+    // err = cree_processus("proc3", &proc3);
+    // if (err < 0){
+    //     printf("Error in start.c/kernel_start : Impossible de créer proc3.\n");
+    // }
     
     idle();
 
