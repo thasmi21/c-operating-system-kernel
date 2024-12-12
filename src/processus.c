@@ -35,7 +35,6 @@ void proc1(void){
                mon_pid());
         dors(1);
     }
-    fin_processus();
 }
 
 
@@ -48,7 +47,6 @@ void proc2(void) {
                mon_pid());
         dors(2);
     }
-    fin_processus();
 }
 
 
@@ -61,7 +59,6 @@ void proc3(void) {
                mon_pid());
         dors(3);
     }
-    fin_processus();
 }
 
 
@@ -93,7 +90,8 @@ int cree_processus(char *nom, void (*code)(void)){
     table_process[pid].pid = pid;
     strcpy(table_process[pid].nom, nom);
     table_process[pid].etat = ACTIVABLE;
-    table_process[pid].tab[0] = (uint64_t)code;
+    table_process[pid].tab[0] = (uint64_t)&proc_launcher;
+    table_process[pid].tab[4] = (uint64_t)code;
     table_process[pid].tab[1] = (uint64_t)&table_process[pid].pile[SIZE_PILE];
 
     pid += 1;
@@ -108,6 +106,12 @@ int32_t mon_pid(void){
 
 char *mon_nom(void){
     return elu->nom;
+}
+
+
+void proc_launcher(void (*proc)(void)){
+    proc();
+    fin_processus();
 }
 
 

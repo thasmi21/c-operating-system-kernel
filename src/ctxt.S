@@ -31,6 +31,7 @@ ctx_sw:
     ld gp,   2*8(a1)
     ld tp,   3*8(a1)
     ld s0,   4*8(a1)
+    ld a0,   4*8(a1)  /*permet de stocker l'adresse de proc() en argument de proc_launcher()*/
     ld s1,   5*8(a1)
     ld s2,   6*8(a1)
     ld s3,   7*8(a1)
