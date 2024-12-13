@@ -4,7 +4,8 @@
 struct processus table_process[SIZE_TABLE];
 struct processus* elu;
 
-int pid = 0; //PID du dernier processus créé
+int nb_proc_crees = 0;   //Nommbre de processus créés depuis le lancement du système, strictement croissant
+int pid = 0;            //PID du dernier processus créé
 int nb_proc_actifs = 0; //Nombre de processus élu, endormi ou activable
 
 const char* get_etat(enum etat e){
@@ -75,28 +76,30 @@ void init_proc(void){
     //Mise à jour des variables globales
     pid = 0;
     nb_proc_actifs = 1;
+    nb_proc_crees += 1;
     elu = &table_process[0];
 }
 
 
 int cree_processus(char *nom, void (*code)(void)){
 
-    //Combien de processus ont déjà été créé ?
-    if (pid > SIZE_TABLE){ 
-        if (nb_proc_actifs == SIZE_TABLE){ //Cas où 
+    //Besoin de prendre le PID d'un processus mort
+    if (nb_proc_crees > SIZE_TABLE){ 
+        if (nb_proc_actifs == SIZE_TABLE){ //Aucun processus n'est mort
             printf("Error in processus.c/cree_processus : trop de processus déjà actifs.\n");
             return -1;
         }
         else {
             int i=1;
-            while (table_process[i].etat != MORT && i < nb_proc_actifs){
+            //Parcourt de table_process pour remplacer le premier processus mort qu'on trouve
+            while (table_process[i].etat != MORT && i <= nb_proc_actifs){
                 i += 1;
             }
-            if (i == nb_proc_actifs){
+            if (i == nb_proc_actifs - 1){ //Problème : aucun processus mort trouvé
                 printf("Error in processus.c/cree_processus : pas de processus mort mais nb_proc_actifs == SIZE_TABLE.\n");
                 return -1;
             }
-            else {
+            else { 
                 pid = i;
             }
         }
@@ -118,7 +121,9 @@ int cree_processus(char *nom, void (*code)(void)){
     table_process[pid].tab[4] = (uint64_t)code;
     table_process[pid].tab[1] = (uint64_t)&table_process[pid].pile[SIZE_PILE];
 
+    //Mise à jour des variables globales
     nb_proc_actifs += 1;
+    nb_proc_crees += 1;
     
     return pid;
 }
