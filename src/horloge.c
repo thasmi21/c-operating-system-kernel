@@ -7,11 +7,16 @@ extern uint32_t position_curseur_lig;
 extern void mon_traitant(void); //Inclusion de la fonction ASM dans le fichier C
 
 void write_timer(char *s){
-    uint32_t a = position_curseur_lig;
+    //On sauvegarde les coordonnées du curseur pour reprendre l'écriture principale après l'actualisation de l'horloge
+    uint32_t a = position_curseur_lig; 
     uint32_t b = position_curseur_col;
+
+    //Ecriture de l'horloge à nbr_secondes + 1
     for (int i = 0; i < 10; i++){
         ecrit_car(0, 150+i, s[i]);
     }
+
+    //Replacement du curseur
     check_curseur(a, b);
 }
 
@@ -40,14 +45,16 @@ void trap_handler(uint64_t mcause, uint64_t mie, uint64_t mip){
             else {
                 s+=1;
             }
+            //Construction d'un char de la forme de l'horloge, actualié à la nouvelle heure
             char timer[11];
             sprintf(timer, "[%02d:%02d:%02d]", h, m, s);
+
             write_timer(timer);  //Impression de la nouvelle heure dans le format "[HH:MM:SS]"
-            decrement_reveil();
+            decrement_reveil();  //Décrémenation du temps restant de chaque processus endormi avant leur réveil
         }
     }
 
-    ordonnance();  
+    ordonnance();  //Appel à la fonction d'ordonnancement pour changer de processus à chaque interruption
     
 }
 
@@ -72,5 +79,5 @@ void enable_timer(){
 
 
 uint32_t nbr_secondes(void){
-    return h/3600 + m/60 + s;
+    return h/3600 + m/60 + s; //Calcul du nombre total de secondes éoulées depuis le lancement du système
 }

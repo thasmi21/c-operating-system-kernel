@@ -26,13 +26,13 @@ void place_curseur(uint32_t lig, uint32_t col){
 void check_curseur(uint32_t lig, uint32_t col){
     if (col==159){
         if (lig == 89){
-            defilement();
+            defilement(); //Cas ou le curseur est tout en bas à droite de l'écran
         }
         else {
-            place_curseur(lig+1, 0);
+            place_curseur(lig+1, 0); //Cas ou le curseur est en bout de ligne
         }
     }
     else {
-        place_curseur(lig,col+1);
+        place_curseur(lig,col+1); //Cas où il reste de la place sur la ligne
     }
 }

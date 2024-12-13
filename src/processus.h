@@ -50,7 +50,7 @@ int32_t mon_pid(void);
 //Renvoie le nom du processus actif
 char *mon_nom(void);
 
-//
+//Permet d'automatiser la fin d'un processus
 void proc_launcher(void (*proc)(void));
 
 //Met fin à un processus en le declarant comme MORT

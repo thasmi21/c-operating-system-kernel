@@ -5,7 +5,7 @@
 //Affichage d'un pixel aux coordonnées (x, y) dans une couleur spécifiée 
 void pixel(uint32_t x, uint32_t y, uint32_t couleur);
 
-//Ecrit le caractère c dans la couleur spécifiée à la ligne et colonne rentrée en argument
+//Ecrit le caractère c dans la couleur spécifiée à la ligne et colonne rentrées en argument
 void ecrit_car(uint32_t lig, uint32_t col, char c);
 
 //Effacage de tout l'écran à partir de la ligne 1 et remise du curseur en position initiale

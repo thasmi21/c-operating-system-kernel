@@ -6,7 +6,6 @@ extern uint32_t position_curseur_lig;
 
 
 void pixel(uint32_t x, uint32_t y, uint32_t couleur){
-
     uint32_t *ptr = (uint32_t *) (0x80000000);
     ptr += (x + y*1280);
     *ptr = couleur;
@@ -44,6 +43,7 @@ void traite_car(char c){
         ecrit_car(position_curseur_lig, position_curseur_col, c);
     }
 
+    //Traitement des caractères spéciaux
     if (c == '\b'){
         if (position_curseur_col > 0){
             place_curseur(position_curseur_lig, position_curseur_col - 1);
@@ -73,6 +73,7 @@ void traite_car(char c){
         place_curseur(position_curseur_lig, 0);
     }
 }
+
 
 void console_putbytes(const char *s, int len){
     for (int i = 0; i < len; i++){

@@ -1,10 +1,11 @@
 #include "include.h"
 
+//Création du tableau contenant tous les processus lancés et d'un pointeur vers le processus actif
 struct processus table_process[SIZE_TABLE];
 struct processus* elu;
 
-int pid = 0;
-int nb_proc_actifs = 0;
+int pid = 0; //PID du dernier processus créé
+int nb_proc_actifs = 0; //Nombre de processus élu, endormi ou activable
 
 const char* get_etat(enum etat e){
     switch (e) {
@@ -17,7 +18,7 @@ const char* get_etat(enum etat e){
 }
 
 void idle(void){
-    
+    //Boucle infinie pour toujours avoir un processus actif
     for (;;) {
         enable_it();
         hlt();
@@ -63,13 +64,15 @@ void proc3(void) {
 
 
 void init_proc(void){
-    strcpy(table_process[0].nom, "idle");
+    //Initialisation de idle (nom, pid, état, contexte et pile d'exécution)
+    strcpy(table_process[0].nom, "idle"); 
     table_process[0].pid = 0;
     table_process[0].etat = ELU;
     table_process[0].tab[0] = (uint64_t)&idle;
     table_process[0].tab[1] = (uint64_t)&table_process[0].pile[SIZE_PILE];
     table_process[0].reveil = 0;
 
+    //Mise à jour des variables globales
     pid = 0;
     nb_proc_actifs = 1;
     elu = &table_process[0];
@@ -78,8 +81,9 @@ void init_proc(void){
 
 int cree_processus(char *nom, void (*code)(void)){
 
-    if (pid > SIZE_TABLE){
-        if (nb_proc_actifs == SIZE_TABLE){
+    //Combien de processus ont déjà été créé ?
+    if (pid > SIZE_TABLE){ 
+        if (nb_proc_actifs == SIZE_TABLE){ //Cas où 
             printf("Error in processus.c/cree_processus : trop de processus déjà actifs.\n");
             return -1;
         }
@@ -98,17 +102,19 @@ int cree_processus(char *nom, void (*code)(void)){
         }
     }
 
+    //Nom trop grand 
     if (sizeof(*nom) > NOM_MAX_SZ){
         printf("Error in processus.c/cree_processus : Nom de processus trop long (taille maximale = 100 caractères).\n");
         return -1;
     }
 
-    pid += 1;
+    pid += 1; 
 
+    //Création de ses attributs
     table_process[pid].pid = pid;
     strcpy(table_process[pid].nom, nom);
     table_process[pid].etat = ACTIVABLE;
-    table_process[pid].tab[0] = (uint64_t)&proc_launcher;
+    table_process[pid].tab[0] = (uint64_t)&proc_launcher; //Afin d'automatiser la fin du processus
     table_process[pid].tab[4] = (uint64_t)code;
     table_process[pid].tab[1] = (uint64_t)&table_process[pid].pile[SIZE_PILE];
 
@@ -122,39 +128,45 @@ int32_t mon_pid(void){
     return elu->pid;
 }
 
+
 char *mon_nom(void){
     return elu->nom;
 }
 
 
 void proc_launcher(void (*proc)(void)){
-    proc();
-    fin_processus();
+    proc();           //Appelle la fonction associée au processus concerné
+    fin_processus();  //Le temrine une fois sa fonction complètement exécutée
 }
 
 
 void fin_processus(void){
-    if (mon_pid() == 0){
+    if (mon_pid() == 0){ //Cas où on chercherait à terminer IDLE
         printf("Error in processus.c/fin_processus : fin_processus() appelé pour le processus IDLE.\n");
     }
     else {
         table_process[mon_pid()].etat = MORT;
         printf("%s, %s : \n", table_process[mon_pid()].nom, get_etat(table_process[mon_pid()].etat));
-        nb_proc_actifs -= 1;
-        ordonnance();
+        nb_proc_actifs -= 1; //Actualisation du nombre de processsus actifs
+        ordonnance();        //Switch afin de ne pas rester sur un processus mort 
     }
 }
 
 
 void affiche_etats(void){
+    //Sauvegarde des coordonnées du curseur le temps d'acstualiser l'affichage
     uint32_t a = position_curseur_lig;
     place_curseur(0,0);
+
+    //Affichage de l'état des SIZE_TABLE derniers processus créés 
     printf("Etat des processus : ");
     for (int i = 0; i <= pid; i++){
         printf("%s: %s ", table_process[i].nom, get_etat(table_process[i].etat));
     }
 
+    //Permet d'effacer les caractères en trop dans le cas ou l'affichage précédent était plus long
     printf("                 ");
 
+    //Restauration du curseur pour reprendre l'écriture
     check_curseur(a-1, 159);
 }
