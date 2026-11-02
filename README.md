@@ -214,6 +214,18 @@ This project provided hands-on experience in:
 
 *Educational kernel project based on a provided skeleton, extended through the implementation of core operating system mechanisms.*
 
+## Automated Testing
+
+The kernel was evaluated using an automated test suite
+provided by Grenoble INP – Phelma.
+
+The tests cover:
+- Console display and cursor management
+- Timer interrupts and system clock
+- Process creation and round-robin scheduling
+- Process sleeping and waking
+- Process termination
+
 ![lastupdate](https://pcsef.pages.ensimag.fr/riscv/seoc/evals/ProjetPCSEF_hurstelm/lastupdate.svg)
 [Log du dernier test](https://pcsef.pages.ensimag.fr/riscv/seoc/evals/ProjetPCSEF_hurstelm/pcsef.log)
 
@@ -242,7 +254,3 @@ This project provided hands-on experience in:
 # Processus gestion basique
 
 ![init_processus_mon_nom_mon_pid](https://pcsef.pages.ensimag.fr/riscv/seoc/evals/ProjetPCSEF_hurstelm/init_processus_mon_nom_mon_pid.svg)
-![cree_processus_ordonnance_simple](https://pcsef.pages.ensimag.fr/riscv/seoc/evals/ProjetPCSEF_hurstelm/cree_processus_ordonnance_simple.svg)
-![cree_processus_ordonnance_double](https://pcsef.pages.ensimag.fr/riscv/seoc/evals/ProjetPCSEF_hurstelm/cree_processus_ordonnance_double.svg)
-![cree_processus_ordonnance_apres_reset](https://pcsef.pages.ensimag.fr/riscv/seoc/evals/ProjetPCSEF_hurstelm/cree_processus_ordonnance_apres_reset.svg)
-![Processus_par_interruption](https://pcsef.pages.ensimag.fr/riscv/seoc/evals/ProjetPCSEF_hurstelm/Processus_par_interruption.svg)
